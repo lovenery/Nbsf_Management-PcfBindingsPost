@@ -1,0 +1,466 @@
+openapi: 3.0.0
+info:
+  description: Binding Support Management Service API
+  title: Nbsf_Management
+  version: 1.0.0
+externalDocs:
+  description: 3GPP TS 29.521 V15.2.0; 5G System; Binding Support Management Service.
+  url: http://www.3gpp.org/ftp/Specs/archive/29_series/29.521/
+servers:
+- url: '{apiRoot}/nbsf-management/v1'
+  variables:
+    apiRoot:
+      default: https://example.com
+      description: apiRoot as defined in subclause 4.4 of 3GPP TS 29.501.
+security:
+- {}
+- oAuth2ClientCredentials:
+  - nbsf-management
+paths:
+  /pcfBindings:
+    get:
+      parameters:
+      - description: The IPv4 Address of the served UE.
+        explode: true
+        in: query
+        name: ipv4Addr
+        required: false
+        schema:
+          $ref: '#/components/schemas/Ipv4Addr'
+        style: form
+      - description: The IPv6 Address Prefix of the served UE.
+        explode: true
+        in: query
+        name: ipv6Prefix
+        required: false
+        schema:
+          $ref: '#/components/schemas/Ipv6Prefix'
+        style: form
+      - description: The MAC Address of the served UE.
+        explode: true
+        in: query
+        name: macAddr48
+        required: false
+        schema:
+          $ref: '#/components/schemas/MacAddr48'
+        style: form
+      - description: DNN.
+        explode: true
+        in: query
+        name: dnn
+        required: false
+        schema:
+          $ref: '#/components/schemas/Dnn'
+        style: form
+      - description: Subscription Permanent Identifier.
+        explode: true
+        in: query
+        name: supi
+        required: false
+        schema:
+          $ref: '#/components/schemas/Supi'
+        style: form
+      - description: Generic Public Subscription Identifier
+        explode: true
+        in: query
+        name: gpsi
+        required: false
+        schema:
+          $ref: '#/components/schemas/Gpsi'
+        style: form
+      - description: The identification of slice.
+        explode: true
+        in: query
+        name: snssai
+        required: false
+        schema:
+          $ref: '#/components/schemas/Snssai'
+        style: form
+      - description: The IPv4 address domain identifier.
+        explode: true
+        in: query
+        name: ipDomain
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PcfBinding'
+          description: The individual PCF session binding session binding information resource matching the query parameter(s) is returned.
+        400:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad request
+        401:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Unauthorized
+        403:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Forbidden
+        404:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Not Found
+        406:
+          description: 406 Not Acceptable
+        414:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: URI Too Long
+        429:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Too Many Requests
+        500:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Internal Server Error
+        503:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Service Unavailable
+        default:
+          description: Generic Error
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PcfBinding'
+        required: true
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PcfBinding'
+          description: The creation of an individual PCF session binding.
+          headers:
+            Location:
+              description: 'Contains the URI of the newly created resource, according
+                to the structure: {apiRoot}/nbsf-management/v1/pcfBindings/{bindingId}'
+              explode: false
+              required: true
+              schema:
+                type: string
+              style: simple
+        400:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad request
+        401:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Unauthorized
+        403:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Forbidden
+        404:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Not Found
+        411:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Length Required
+        413:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Payload Too Large
+        415:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Unsupported Media Type
+        429:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Too Many Requests
+        500:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Internal Server Error
+        503:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Service Unavailable
+        default:
+          description: Generic Error
+  /pcfBindings/{bindingId}:
+    delete:
+      parameters:
+      - description: Represents the individual PCF Session Binding.
+        explode: false
+        in: path
+        name: bindingId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        204:
+          description: No Content. The Individual PCF session binding information resource is deleted.
+        400:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad request
+        401:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Unauthorized
+        403:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Forbidden
+        404:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Not Found
+        429:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Too Many Requests
+        500:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Internal Server Error
+        503:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Service Unavailable
+        default:
+          description: Generic Error
+components:
+  schemas:
+    PcfBinding:
+      example:
+        pcfFqdn: pcfFqdn
+        snssai:
+          sd: sd
+          sst: 153
+        pcfIpEndPoints:
+        - ipv6Address: 2001:db8:85a3::8a2e:370:7334
+          port: 5248
+          ipv4Address: 198.51.100.1
+        - ipv6Address: 2001:db8:85a3::8a2e:370:7334
+          port: 5248
+          ipv4Address: 198.51.100.1
+        pcfDiamHost: pcfDiamHost
+        ipDomain: ipDomain
+        dnn: dnn
+        ipv4Addr: 198.51.100.1
+        supi: supi
+        ipv6Prefix: 2001:db8:abcd:12::0/64
+        macAddr48: macAddr48
+        pcfDiamRealm: pcfDiamRealm
+        gpsi: gpsi
+      properties:
+        supi:
+          pattern: ^(imsi-[0-9]{5,15}|nai-.+|.+)$
+          type: string
+        gpsi:
+          pattern: ^(msisdn-[0-9]{5,15}|extid-[^@]+@[^@]+|.+)$
+          type: string
+        ipv4Addr:
+          example: 198.51.100.1
+          pattern: ^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$
+          type: string
+        ipv6Prefix:
+          $ref: '#/components/schemas/Ipv6Prefix'
+        ipDomain:
+          type: string
+        macAddr48:
+          pattern: ^([0-9a-fA-F]{2})((-[0-9a-fA-F]{2}){5})$
+          type: string
+        dnn:
+          type: string
+        pcfFqdn:
+          type: string
+        pcfIpEndPoints:
+          description: IP end points of the PCF or the IP end points of the PCF hosting the Npcf_PolicyAuthorization service. At least one of pcfFqdn or pcfIpEndPoints shall be included if the PCF supports N5 interface. If the pcfIpEndPoints is provided at the PCF level, the transport and port in the pcfIpEndPoints are not required.
+          items:
+            $ref: '#/components/schemas/IpEndPoint'
+          minItems: 1
+          type: array
+        pcfDiamHost:
+          pattern: ^([A-Za-z0-9]+(-[A-Za-z0-9]+).)+[a-z]{2,}$
+          type: string
+        pcfDiamRealm:
+          pattern: ^([A-Za-z0-9]+(-[A-Za-z0-9]+).)+[a-z]{2,}$
+          type: string
+        snssai:
+          $ref: '#/components/schemas/Snssai'
+      required:
+      - dnn
+      - snssai
+      type: object
+    Ipv4Addr:
+      example: 198.51.100.1
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$
+      type: string
+    Ipv6Prefix:
+      allOf:
+      - pattern: ^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))$
+      - pattern: ^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)$
+      example: 2001:db8:abcd:12::0/64
+      type: string
+    MacAddr48:
+      pattern: ^([0-9a-fA-F]{2})((-[0-9a-fA-F]{2}){5})$
+      type: string
+    Dnn:
+      type: string
+    Supi:
+      pattern: ^(imsi-[0-9]{5,15}|nai-.+|.+)$
+      type: string
+    Gpsi:
+      pattern: ^(msisdn-[0-9]{5,15}|extid-[^@]+@[^@]+|.+)$
+      type: string
+    Snssai:
+      example:
+        sd: sd
+        sst: 153
+      properties:
+        sst:
+          format: int32
+          maximum: 255
+          minimum: 0
+          type: integer
+        sd:
+          pattern: ^[A-Fa-f0-9]{6}$
+          type: string
+      required:
+      - sst
+      type: object
+    ProblemDetails:
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          format: int32
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        cause:
+          type: string
+        invalidParams:
+          items:
+            $ref: '#/components/schemas/InvalidParam'
+          minItems: 1
+          type: array
+      type: object
+    Uri:
+      type: string
+    InvalidParam:
+      properties:
+        param:
+          type: string
+        reason:
+          type: string
+      required:
+      - param
+      type: object
+    Fqdn:
+      type: string
+    IpEndPoint:
+      example:
+        ipv6Address: 2001:db8:85a3::8a2e:370:7334
+        port: 5248
+        ipv4Address: 198.51.100.1
+      properties:
+        ipv4Address:
+          example: 198.51.100.1
+          pattern: ^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$
+          type: string
+        ipv6Address:
+          $ref: '#/components/schemas/Ipv6Addr'
+        transport:
+          $ref: '#/components/schemas/TransportProtocol'
+        port:
+          format: int32
+          maximum: 65535
+          minimum: 0
+          type: integer
+      type: object
+    TransportProtocol:
+      anyOf:
+      - enum:
+        - TCP
+        type: string
+      - type: string
+    DiameterIdentity:
+      pattern: ^([A-Za-z0-9]+(-[A-Za-z0-9]+).)+[a-z]{2,}$
+      type: string
+    Ipv6Addr:
+      allOf:
+      - pattern: ^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))$
+      - pattern: ^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))$
+      example: 2001:db8:85a3::8a2e:370:7334
+      type: string
+  securitySchemes:
+    oAuth2ClientCredentials:
+      flows:
+        clientCredentials:
+          scopes:
+            nbsf-management: Access to the Nbsf_Management API
+          tokenUrl: '{nrfApiRoot}/oauth2/token'
+      type: oauth2
