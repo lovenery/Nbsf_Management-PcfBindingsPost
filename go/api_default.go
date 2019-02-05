@@ -11,6 +11,8 @@ package openapi
 
 import (
 	"net/http"
+	"fmt"
+	"encoding/json"
 )
 
 // PcfBindingsBindingIdDelete - 
@@ -25,8 +27,20 @@ func PcfBindingsGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// PcfBindingsPost - 
 func PcfBindingsPost(w http.ResponseWriter, r *http.Request) {
+	var pcfBinding PcfBinding
+
+	json.NewDecoder(r.Body).Decode(&pcfBinding)
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	if pcfBinding.Dnn != "" {
+		w.WriteHeader(http.StatusCreated)
+		// fmt.Fprintf(w, "HTTP: 201\n")
+		json.NewEncoder(w).Encode(&pcfBinding)
+	} else {
+	}
+
+	fmt.Printf("pcfBinding: %+v\n", pcfBinding)
+	// fmt.Fprintf(w, "Done\n")
 }
